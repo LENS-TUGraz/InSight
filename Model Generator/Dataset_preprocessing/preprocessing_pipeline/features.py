@@ -15,8 +15,6 @@ if not log.hasHandlers():
     ch.setFormatter(formatter)
     log.addHandler(ch)
     
-    
-
 import numpy as np
 import pandas as pd
 from fastcore.transform import *

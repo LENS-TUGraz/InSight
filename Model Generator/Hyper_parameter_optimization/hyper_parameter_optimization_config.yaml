@@ -1,0 +1,22 @@
+---
+# ML models to run
+# Choose which ML models should be used in the hyper parameter optimization and choos classification, regression, or mo for multi-output models.
+models_to_run: [['xgboost', 'class'],  ['xgboost', 'reg']]
+
+
+# Hyper Parameter Optimization Config
+training_configuration:
+    kfolds: 5
+    kfgroups: ["setup_id"] # Split KFold by setup_id 
+    conditions: ['los', "wlos",'nlos'] # Only consider los and nlos labels #'wlos', #'nlos'
+    resample: False # Equalize the number of smaples of NLOS field (currently onls 1, 0 ) 
+    resample_tag: 'NLOS' # if 'resample=True' then resample based on which tag
+    early_stopping: True
+
+grid_search_config:
+    xgboost:
+        cir_start: [0, 5, 10, 15, 18, 20, 25]
+        cir_end: [172, 132, 72, 38, 25, 20, 15]
+        max_depth: [10, 6, 3, 1]
+        n_estimators: [100, 60, 30, 10]
+    
