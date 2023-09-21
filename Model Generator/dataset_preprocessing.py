@@ -34,7 +34,7 @@ tf.keras.utils.set_random_seed(seed)
 def load_yaml(file_name):
     file = {}
     with open(f"{file_name}.yaml") as f:
-        file = yaml.load(f, Loader=SafeLoader)
+        file = yaml.load(f, Loader=yaml.SafeLoader)
     return file
 
 config = load_yaml('./Dataset_preprocessing/dataset_input_config')
@@ -98,6 +98,6 @@ for name, ds in data_sets:
 
 for idx, data in enumerate(data_sets_inital_processed):
     name = "train" if idx == 0 else "test"
-    with open(f"./Dataset_preprocessing/preprocessed_datasets/{name}_data.pkl", "wb") as f:
+    with open(f"./Datasets/preprocessed_datasets/{name}_data.pkl", "wb") as f:
         p.dump(data, f)
     

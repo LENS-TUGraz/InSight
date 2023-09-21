@@ -1,0 +1,9 @@
+---
+model_to_run:
+    model: "xgboost"
+    mltype: ["class", "reg"]
+test_model: True                   
+use_kfold: False
+use_validation_set: True                                        
+fp_pos: 20
+...
