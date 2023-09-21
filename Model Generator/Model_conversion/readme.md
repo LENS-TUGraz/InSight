@@ -1,6 +1,6 @@
 # Model Conversion
 
-This component converts the python models to C-code. It produces the model files themselves and the config files required to process the CIR. These files can be placed in the [Embedded NLOS Engine](../Embedded NLOS Engine/readme.md).
+This component converts the python models to C-code. It produces the model files themselves and the config files required to process the CIR. These files can be placed in the Embedded NLOS Engine.
 ## How To
 
 Use the ``model_conversion_config.yaml`` file to enter the model and type that should be converted. The model will be retrained with the hyper-parameters provided by [hyper-parameter optimization](Hyper_parameter_optimization/readme.md). Optionally the model can be tested again to check that everything went smoothly.
