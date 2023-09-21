@@ -1,0 +1,27 @@
+# DATASETS
+# Choose which datasets should be merged together by putting them in the same list.
+datasets_to_run:
+    train: ["stocker_unf"] 
+    test: ["stocker_unf"]
+    
+    
+# Pipeline for initial data post processing, e.g., calculate global features ###
+pre_processing:
+    # define start and end of CIR in relation to the detected first path
+    cir_start: 5
+    cir_end: 30
+    
+    # Confine data if necessary
+    max_rng: 10 
+    min_rng: -0.5 
+    max_rng_e: 10 
+    min_rng_e: -0.8 
+    
+    # Use none, use given, or recreate bias correction using polynomial function
+    bias_correction: "poly" # none, given, poly
+    
+    # Data Cleaning to filter outliers
+    filter_negative_values_column: null
+    outlier_column: "rng"
+    groupby_columns: ["setup_id"] 
+    filter_outlier_verbose: false
