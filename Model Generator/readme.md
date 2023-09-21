@@ -1,5 +1,5 @@
 # Model Generator
-The model generator finds the best suitable model that satisfies the user-specific requirements. It can merge mutliple datasets together and compare multiple models to find the best one.
+The model generator finds the best suitable model that satisfies the user-specific requirements and converts it to C code that the Embedded NLOS Engine can use. It can merge mutliple datasets together and compare different models to find the best suitable model for the requirements.
 
 ## How To
 
