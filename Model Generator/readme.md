@@ -3,7 +3,7 @@ The model generator finds the best suitable model that satisfies the user-specif
 
 ## How To
 
-1. [Dataset pre-processing](Dataset_preprocessing/readme.md): configure the settings in [dataset input](Dataset_preprocessing/dataset_input_config.yaml) and run the [dataset_preprocessing.py] file.
-2. [Hyper-parameter optimization](Hyper_parameter_optimization/readme.md): configure the settings in the [config](Hyper_parameter_optimization/hyper_parameter_optimization_config.yaml) and run the [hyper_parameter_optimization.py] file.
-3. [Model selection](Model_selection/readme.md): configure the settings in the [config](Model_selection/model_selection_config.yaml) and run the [model_selection.py] file.
-4. [Model conversion](Model_conversion/readme.md): configure the settings in the [config](Model_conversion/model_conversion_config.yaml) and run the [model_conversion.py] file.
+1. [Dataset pre-processing](Dataset_preprocessing/readme.md): configure the settings in [dataset input](Dataset_preprocessing/dataset_input_config.yaml) and run the [dataset_preprocessing.py](dataset_preprocessing.py) file.
+2. [Hyper-parameter optimization](Hyper_parameter_optimization/readme.md): configure the settings in the [config](Hyper_parameter_optimization/hyper_parameter_optimization_config.yaml) and run the [hyper_parameter_optimization.py](hyper_parameter_optimization.py) file.
+3. [Model selection](Model_selection/readme.md): configure the settings in the [config](Model_selection/model_selection_config.yaml) and run the [model_selection.py](model_selection.py) file.
+4. [Model conversion](Model_conversion/readme.md): configure the settings in the [config](Model_conversion/model_conversion_config.yaml) and run the [model_conversion.py](model_conversion.py) file.
