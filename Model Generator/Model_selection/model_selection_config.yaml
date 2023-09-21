@@ -1,0 +1,5 @@
+---
+# Objective functions to select best model
+objective_class: "score_accuracy"
+objective_reg: "score_r2"
+...
