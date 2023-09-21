@@ -8,4 +8,4 @@ The model generator finds the best suitable model that satisfies the user-specif
 3. [Hyper-parameter optimization readme](Hyper_parameter_optimization/readme.md): configure the settings in the [config](Hyper_parameter_optimization/hyper_parameter_optimization_config.yaml) and run the [hyper_parameter_optimization.py](hyper_parameter_optimization.py) file.
 4. [Model selection readme](Model_selection/readme.md): configure the settings in the [config](Model_selection/model_selection_config.yaml) and run the [model_selection.py](model_selection.py) file.
 5. [Model conversion readme](Model_conversion/readme.md): configure the settings in the [config](Model_conversion/model_conversion_config.yaml) and run the [model_conversion.py](model_conversion.py) file.
-6. Move the model and pre-processing files, found in the [model conversion output](Model_Conversion/model_conversion_output), to the [Embedded NLOS Engine](../Embedded NLOS Engine/readme.md).
+6. Move the model and pre-processing files, found in the model conversion output, to the Embedded NLOS Engine.
