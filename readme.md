@@ -4,6 +4,9 @@ The InSight framework enables non-line-of-sight (NLOS) classification, error cor
 
 InSight is designed to be configurable and the components exchangeable. Feel free to add, modify, or exchange any part to better suit your needs. 
 
+![InSight Design Overview](insight_overview.png)
+
+
 ## Reference
 TBD: add reference to paper and citation mark.
 
