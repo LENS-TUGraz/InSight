@@ -7,5 +7,19 @@ InSight is designed to be configurable and the components exchangeable. Feel fre
 ![InSight Design Overview](insight_overview.png)
 
 
-## Reference
-For detailed information, please read the full [paper](http://www.carloalbertoboano.com/documents/gallacher23insight.pdf) 
+## Citation
+For detailed information, feel free to read the full paper [InSight: Enabling NLOS Classification, Error Correction, and Anchor Selection on Resource-Constrained UWB Devices](http://www.carloalbertoboano.com/documents/gallacher23insight.pdf), and if you use our repository, we would appreciate a citation.
+```
+@inproceedings{gallacher23insight,
+  author = {Markus Gallacher and Michael Stocker and Michael Baddeley and Kay R\"{o}mer and Carlo Alberto Boano},
+  title = {{InSight: Enabling NLOS Classification, Error Correction, and Anchor Selection on Resource-Constrained UWB Devices}},
+  booktitle = {Proceedings of the $20^{th}$ International Conference on Embedded Wireless Systems and Networks ({EWSN})},
+  pages = {},	
+  location = {Rende, Italy}, 
+  month = sep,	
+  year = {2023},
+  publisher = {ACM},
+  isbn = {},
+  doi = {},	
+};
+```
