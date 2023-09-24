@@ -7,3 +7,5 @@ InSight is designed to be configurable and the components exchangeable. Feel fre
 ![InSight Design Overview](insight_overview.png)
 
 
+## Reference
+For detailed information, please read the full [paper](http://www.carloalbertoboano.com/documents/gallacher23insight.pdf) 
