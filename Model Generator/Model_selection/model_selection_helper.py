@@ -8,7 +8,6 @@ Created on Thu Mar 30 19:02:02 2023
 
 
 #%% Pareto
-import numpy
 import oapackage
 
 def pareto_front(datapoints):    
@@ -38,18 +37,8 @@ def estimate_runtime_remnet(df):
 def estimate_runtime_with_FLOPs(reg_df_od_f, FLOPS):
     reg_df_od_f["estimated_runtime"] = reg_df_od_f.flops / FLOPS
     return reg_df_od_f
-    
-
-def calculate_FLOPs(model, data):
-    for index, row in data.iterrows():
-        if model == "xgboost":
-            params = {"max_depth":row.max_depth, "n_estimators":row.n_estimators}
-            flops = get_xgboost_flops(**params)
-        data.loc[index, "flops"] = flops
-    return data
 
 
-#%%
 def filter_based_on_requirements(data, objective, requirement, minimum=False):
     if requirement != -1:
         if minimum:
@@ -58,13 +47,3 @@ def filter_based_on_requirements(data, objective, requirement, minimum=False):
             data = data[data[objective] < requirement]
     return data
  
-
-#%%
-def get_xgboost_flops(**params):
-    leaf_addition = 1
-    tree_flops = (params["max_depth"] + leaf_addition) * params["n_estimators"]
-    output_flops = 1
-        
-    total_flops = tree_flops + output_flops
-    return total_flops
-

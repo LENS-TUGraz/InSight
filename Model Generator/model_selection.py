@@ -90,11 +90,10 @@ for model in models:
     class_df_od_f = class_df_od
     class_df_od_f = filter_based_on_requirements(class_df_od_f, "model_size", max_footprint, minimum=False)
     if class_df_od_f.empty:
-        assert False, f"Model size requirement not fulfilled"
+        assert False, f"Model size requirement not fulfilled. Shrink model or update user specific requirements!"
     if "remnet" in model:
         class_df_od_f = estimate_runtime_remnet(class_df_od_f)
     else:
-        class_df_od_f = calculate_FLOPs(model, class_df_od_f)
         class_df_od_f = estimate_runtime_with_FLOPs(class_df_od_f, requirements["FLOPS"])
     class_df_od_f = filter_based_on_requirements(class_df_od_f, "estimated_runtime", max_runtime, minimum=False)     
     if class_df_od_f.empty:
@@ -106,11 +105,10 @@ for model in models:
     reg_df_od_f = reg_df_od
     reg_df_od_f = filter_based_on_requirements(reg_df_od_f, "model_size", max_footprint, minimum=False)
     if reg_df_od_f.empty:
-        assert False, f"Model size requirement not fulfilled"
+        assert False, f"Model size requirement not fulfilled. Shrink model or update user specific requirements"
     if "remnet" in model:
         reg_df_od_f = estimate_runtime_remnet(reg_df_od_f)
     else:
-        reg_df_od_f = calculate_FLOPs(model, reg_df_od_f)
         reg_df_od_f = estimate_runtime_with_FLOPs(reg_df_od_f, requirements["FLOPS"])
     reg_df_od_f = filter_based_on_requirements(reg_df_od_f, "estimated_runtime", max_runtime, minimum=False)  
     if reg_df_od_f.empty:

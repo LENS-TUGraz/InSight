@@ -41,7 +41,7 @@ def load_data_stocker_unf(fname):
 
 """ Defines dictionary, keys (short dataset names) are put in dataset_input_config.yaml and define which datasets are loaded. """
 dataset_db = {}
-dataset_db['stocker_unf'] = {"name":"Stocker (III) Unfiltered", "file":f"""./Datasets/measurement_campaign/data_set_8a84_83a7_all.feather""", "loader":load_data_stocker_unf, "data_frame":None}
+dataset_db['stocker_unf'] = {"name":"Stocker (III) Unfiltered", "file":"""./Datasets/measurement_campaign/data_set_8a84_83a7_all.feather""", "loader":load_data_stocker_unf, "data_frame":None}
 
 def load_dataset(dataset_id):
     df = dataset_db[dataset_id]["loader"](dataset_db[dataset_id]["file"])

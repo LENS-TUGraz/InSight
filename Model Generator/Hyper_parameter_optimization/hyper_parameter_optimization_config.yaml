@@ -1,12 +1,12 @@
 ---
 # ML models to run
 # Choose which ML models should be used in the hyper parameter optimization and choos classification, regression, or mo for multi-output models.
-models_to_run: [['xgboost', 'class'],  ['xgboost', 'reg']]
+models_to_run: [['xgboost', 'reg'], ["remnet", "reg"]]#,  ['xgboost', 'reg']] # ["remnet", "class"], ["remnet", "reg"], ["remnet", "mo"], ["svm", "class"], ["svm", "reg"]
 
 
 # Hyper Parameter Optimization Config
 training_configuration:
-    kfolds: 5
+    kfolds: 2
     kfgroups: ["setup_id"] # Split KFold by setup_id 
     conditions: ['los', "wlos",'nlos'] # Only consider los and nlos labels #'wlos', #'nlos'
     resample: False # Equalize the number of smaples of NLOS field (currently onls 1, 0 ) 
@@ -14,9 +14,20 @@ training_configuration:
     early_stopping: True
 
 grid_search_config:
+    remnet:
+        cir_start: [0]#, 10, 15, 18], #, 20, 25]
+        cir_end: [172]#, 132, 72, 38, 30, 25], #, 20, 15]
+        N: [3]#, 2, 1], #, 2, 1
+        F: [16]#, 8, 4], #, 8, 4
+    svm:
+        cir_start: [0]#, 10, 15, 25], # [0, 10, 15, 18, 20, 25]
+        cir_end: [400]#, 172, 150, 30, 25, 20, 15],
+        n_measurements: [50]# , 25, 5, 1],
+        epsilon: [0.1]#, 0.2, 0.3],
+        C: [50]#, 100, 1000] #[0.1, 1, 10]
     xgboost:
-        cir_start: [0, 5, 10, 15, 18, 20, 25]
-        cir_end: [172, 132, 72, 38, 25, 20, 15]
-        max_depth: [10, 6, 3, 1]
-        n_estimators: [100, 60, 30, 10]
+        cir_start: [0]#, 5, 10, 15, 18, 20, 25]
+        cir_end: [172]#, 132, 72, 38, 25, 20, 15]
+        max_depth: [10]#, 6, 3, 1]
+        n_estimators: [100]#, 60, 30, 10]
     

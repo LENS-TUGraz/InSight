@@ -92,8 +92,6 @@ data_sets_inital_processed = []
 for name, ds in data_sets:
     print(f"Preprocessing dataset {name}")
     dip = data_inital_processing(ds)
-    sns.histplot(data=dip, x="rng_e", hue="NLOS")
-    plt.show()
     data_sets_inital_processed.append((name,dip))
 
 for idx, data in enumerate(data_sets_inital_processed):

@@ -4,26 +4,11 @@ Created on Thu Aug  4 09:26:33 2022
 
 @author: turtle9
 """
-
-""" LOAD PRE-PROCESSED DATA """
-import pickle as p
-import os
-
-datasets_inital_processed = []
-file_name = "train_data"
-with open(f"Datasets/preprocessed_datasets/{file_name}.pkl", 'rb') as f:
-   datasets_inital_processed.append(p.load(f))
    
-file_name = "test_data"
-if os.path.isfile(f"Datasets/preprocessed_datasets/{file_name}.pkl"):
-    with open(f"Datasets/preprocessed_datasets/{file_name}.pkl", 'rb') as f:
-        datasets_inital_processed.append(p.load(f))
-   
-#%%
 """ HYPER-PARAMETER OPTIMIZATION """
 import logging
 
-log = logging.getLogger('MLHPE')
+log = logging.getLogger('MLHPO')
 if not log.hasHandlers():
     log.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
@@ -45,6 +30,20 @@ from Hyper_parameter_optimization.data_split import split_dataframe,split_test_v
 from Hyper_parameter_optimization.training_configurations import grid_search_metadata
 from sklearn.utils.class_weight import compute_sample_weight
 import yaml
+
+""" LOAD PRE-PROCESSED DATA """
+import pickle as p
+import os
+
+datasets_inital_processed = []
+file_name = "train_data"
+with open(f"Datasets/preprocessed_datasets/{file_name}.pkl", 'rb') as f:
+   datasets_inital_processed.append(p.load(f))
+   
+file_name = "test_data"
+if os.path.isfile(f"Datasets/preprocessed_datasets/{file_name}.pkl"):
+    with open(f"Datasets/preprocessed_datasets/{file_name}.pkl", 'rb') as f:
+        datasets_inital_processed.append(p.load(f))
 
 seed = 100
 np.random.seed(seed)
@@ -72,6 +71,7 @@ for model, mltype in models_to_run:
         for idx, hyperparameter in enumerate(grid_search_config[model].keys()):
             config[hyperparameter] = config_combination[idx] 
         config["cir_len"] = config["cir_end"] - config["cir_start"]
+        config["early_stopping"] = training_configuration["early_stopping"]
         print(f"{config}")
         
         if config["cir_len"] <= 0:
@@ -213,23 +213,65 @@ for model, mltype in models_to_run:
                     print(f"Precision Score {result_entry['score_precision'] }")
                     print(f"Recall Score {result_entry['score_recall'] }")
                     
+                elif mlmod.mltype == "multioutput":
+                    # score_r2, score_f1 = mlmod.score(dfc.loc[test])
+                    y_reg_hat_scaled, y_reg_scaled, y_reg_hat, y_class_hat, y_class = mlmod.predict(dff_test)
+      
+                    data = {"y_reg_scaled":y_reg_scaled.flatten(),
+                            "y_reg_hat_scaled":y_reg_hat_scaled.flatten(), 
+                            "y_reg_hat":y_reg_hat.flatten(),
+                            "y_class_hat":y_class_hat.flatten(),
+                            "original_index": dff_test.original_index,
+                            # "dataset_id": dff_test.dataset_id,
+                            "rng_e":dff_test.rng_e}
+                    
+                    sel = ~np.isnan(y_reg_hat_scaled)
+                    result_entry['score_r2'] = r2_score(y_reg_scaled[sel], y_reg_hat_scaled[sel])
+                    print(f"R2 Score {result_entry['score_r2'] }")                            
+                    weights = compute_sample_weight(class_weight="balanced",y=y_class)
+                    
+                    result_entry['score_f1'] = f1_score(y_class,y_class_hat,sample_weight=weights)
+                    result_entry['score_accuracy'] = accuracy_score(y_class,y_class_hat,sample_weight=weights)
+                    result_entry['score_precision'] = precision_score(y_class,y_class_hat,sample_weight=weights)
+                    result_entry['score_recall'] = recall_score(y_class,y_class_hat,sample_weight=weights)
+                    weights = dff_test.rng_e_scaled
+                    wscore = accuracy_score(y_class,y_class_hat,sample_weight=weights)
+                    result_entry['score_wa'] = wscore
+                    print(f"R2 Score {result_entry['score_r2'] }")
+                    print(f"F1 Score {result_entry['score_f1'] }")
+                    print(f"WA Score {wscore}")
                     
                 ''' Estimate the memory size'''
                 folder = ""
-                if "xgboost" in mlmod.name.lower():
-                    folder = "xgboost"
+                if "remnet" in mlmod.name.lower():
+                    folder = "remnet"
+                elif "svm" in mlmod.name.lower() or "svc" in mlmod.name.lower() or "svr" in mlmod.name.lower():
+                    folder = "feature_based/libsvm"
                     file_name = f"""{mlmod.name}_{mlmod.mltype}"""
-                    if not os.path.exists(f"./Hyper_parameter_optimization/intermediate_results/{folder}"):
-                        os.makedirs(f"./Hyper_parameter_optimization/intermediate_results/{folder}")
+                elif "xgboost" in mlmod.name.lower():
+                    folder = "xgboost"
+                
+                file_name = f"""{mlmod.name}_{mlmod.mltype}"""
+                if not os.path.exists(f"./Hyper_parameter_optimization/intermediate_results/{folder}"):
+                    os.makedirs(f"./Hyper_parameter_optimization/intermediate_results/{folder}")
                     
                 mlmod.save(f"""./Hyper_parameter_optimization/intermediate_results/{folder}/{mlmod.name}_{mlmod.mltype}""")
                 
-                if "xgboost" in mlmod.name.lower():
+                if "remnet" in mlmod.name.lower():
+                    file_name = mlmod.convert_saved_model_to_tflite(f"""./Hyper_parameter_optimization/intermediate_results/{folder}""", f"""{mlmod.name}_{mlmod.mltype}""", quantization=mlmod.params["quantization"])
+                    os.system(f"""xxd -i ./Hyper_parameter_optimization/intermediate_results/{folder}_lite/{file_name} ./Hyper_parameter_optimization/intermediate_results/{folder}_lite/{file_name}.cc""")
+                elif "svm" in mlmod.name.lower():
+                    mlmod.convert_to_lite(f"""./output/models/{folder}_lite/{mlmod.name}_{mlmod.mltype}""", len(mlmod.params["features"]))
+                elif "xgboost" in mlmod.name.lower():
                     if not os.path.exists(f"./Hyper_parameter_optimization/intermediate_results/{folder}_lite"):
                         os.makedirs(f"./Hyper_parameter_optimization/intermediate_results/{folder}_lite")
                     mlmod.convert_to_lite(f"""./Hyper_parameter_optimization/intermediate_results/{folder}_lite/{mlmod.name}_{mlmod.mltype}.h""", len(dff_test.NLOS.unique()))
 
-                if "xgboost" in mlmod.name.lower():
+                if "remnet" in mlmod.name.lower():
+                    model_size = mlmod.find_arena_size(f"""./Hyper_parameter_optimization/intermediate_results/{folder}_lite/{file_name}""")
+                elif "svm" in mlmod.name.lower():
+                    model_size = os.path.getsize(f"""./output/models/{folder}_lite/{file_name}.c""")
+                elif "xgboost" in mlmod.name.lower():
                     model_size = os.path.getsize(f"""./Hyper_parameter_optimization/intermediate_results/{folder}_lite/{file_name}.h""")
                 else:
                     model_size = 0
@@ -238,10 +280,22 @@ for model, mltype in models_to_run:
                 print(f"{model_size = }")
                 
                 """ Estimate number of parameters """
-                ### total params in NN, number of support vectors in SVM, and number of nodes in XGBoost Tree
+                ### total params in NN, and number of nodes in XGBoost Tree
                 n_parameters = mlmod.get_num_parameters()
                 result_entry["n_parameters"] = n_parameters
                 print(f"{n_parameters = }")
+
+                """ Estimate flops """
+                if model == "rement":
+                    flops = mlmod.get_tf_flops(f"""./Hyper_parameter_optimization/intermediate_results/{folder}/{mlmod.name}_{mlmod.mltype}""", batch_size=None)
+                elif model == "svm":
+                    params = {"n_features":len(mlmod.params["features"]), "n_support_vectors":1}
+                    flops = mlmod.get_svm_flops(**params)
+                elif model == "xgboost":
+                    params = {"max_depth":config["max_depth"], "n_estimators":config["n_estimators"]}
+                    flops = mlmod.get_xgboost_flops(**params)
+                result_entry["flops"] = flops
+                print(f"{flops = }")
 
                 
                 ''' append to results '''

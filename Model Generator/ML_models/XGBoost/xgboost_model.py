@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from abc import abstractmethod
 import numpy as np
 from ctypes import *
-from ML_models.xgboost_converter import xgboost_converter
+from ML_models.XGBoost.xgboost_converter import xgboost_converter
 import pandas as pd
 
 
@@ -156,7 +156,7 @@ class MLMethodXGRegression(MLMethodBase):
         
     def __init__(self, **params):
         self.scaler = params['scaler'] 
-        super().__init__(name=f"xgboost_regressor_{self.scaler}",mltype="regression", params=params)
+        super().__init__(name="xgboost",mltype="regression", params=params)
         # self.data_preprocess_pipeline = Pipeline([Transform_SVM_Regression])
         self.data_preprocess_pipeline = Pipeline([Transform_Regression()])
         self.data_preprocess_pipeline.setup(params,False)
@@ -273,6 +273,15 @@ class MLMethodXGRegression(MLMethodBase):
         
     def get_num_parameters(self):
         return calc_num_parameters_XGBoost(self.model)
+    
+    def get_xgboost_flops(self, **params):
+        leaf_addition = 1
+        tree_flops = (params["max_depth"] + leaf_addition) * params["n_estimators"]
+        output_flops = 1
+            
+        total_flops = tree_flops + output_flops
+        return total_flops
+
 
 from xgboost import plot_importance
 @dataclass
@@ -289,7 +298,7 @@ class MLMethodXGClassifier(MLMethodBase):
     
     def __init__(self, **params):
         self.scaler = params['scaler'] 
-        super().__init__(name=f"xgboost_classifier_{self.scaler}",mltype="classification", params=params)
+        super().__init__(name="xgboost",mltype="classification", params=params)
         print(f"Init XGBoostClassifier {params=}")
         # self.data_preprocess_pipeline = Pipeline([Transform_SVM_Classifier])
         self.data_preprocess_pipeline = Pipeline([Transform_Classifier()])
@@ -394,3 +403,12 @@ class MLMethodXGClassifier(MLMethodBase):
         
     def get_num_parameters(self):
         return calc_num_parameters_XGBoost(self.model)
+    
+    def get_xgboost_flops(self, **params):
+        leaf_addition = 1
+        tree_flops = (params["max_depth"] + leaf_addition) * params["n_estimators"]
+        output_flops = 1
+            
+        total_flops = tree_flops + output_flops
+        return total_flops
+
