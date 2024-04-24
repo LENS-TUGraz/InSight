@@ -1,0 +1,6 @@
+#ifndef ENGINE_CONFIG_H
+#define ENGINE_CONFIG_H 
+
+#define ML_MODEL_ENABLE_XGBOOST
+
+#endif
